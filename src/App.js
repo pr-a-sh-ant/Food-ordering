@@ -1,8 +1,17 @@
+import Header from "./compoments/Layout/Header";
+import React from "react";
+import Meals from "./compoments/Meals/Meals";
+import Cart from "./compoments/Cart/Cart";
+
 function App() {
   return (
-    <div>
-      <h2>Let's get started!</h2>
-    </div>
+    <React.Fragment>
+      <Cart />
+      <Header />
+      <main>
+        <Meals />
+      </main>
+    </React.Fragment>
   );
 }
 
