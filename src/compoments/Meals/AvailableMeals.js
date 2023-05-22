@@ -5,16 +5,22 @@ import { useEffect, useState } from "react";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(null);
   useEffect(() => {
     getMeals();
   }, []);
 
   const getMeals = async function () {
     try {
+      setHasError(null);
+      setIsLoading(true);
       const response = await fetch(
         "https://react-test-4b06d-default-rtdb.firebaseio.com/meals.json"
       );
+      if (!response.ok) {
+        throw new Error("Cant fetch Data");
+      }
       const data = await response.json();
       const loadedMeals = [];
 
@@ -26,10 +32,12 @@ const AvailableMeals = () => {
           price: data[key].price,
         });
       }
+      setIsLoading(false);
       setMeals(loadedMeals);
     } catch (err) {
       console.error(err);
-      console.log("Hello");
+      setIsLoading(false);
+      setHasError(err.message);
     }
   };
 
@@ -45,7 +53,9 @@ const AvailableMeals = () => {
   return (
     <section className={classes.meals}>
       <Card>
-        <ul>{mealsList}</ul>
+        {isLoading && <p>Fetching Data...</p>}
+        {!isLoading && !hasError && <ul>{mealsList}</ul>}
+        {hasError && <p>{hasError}</p>}
       </Card>
     </section>
   );
